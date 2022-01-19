@@ -1,0 +1,47 @@
+@font-face {
+	font-family: NotoSans;
+	font-style: normal;
+	font-weight: 100;
+	src: local('NotoSansLight'),
+			 local('NotoSansLight'),
+			 url(~@/assets/fonts/notosanskr-light.eot);
+	src: url(~@/assets/fonts/notosanskr-light.eot?#iefix) format('embedded-opentype'),
+			 url(~@/assets/fonts/notosanskr-light.woff2) format('woff2'),
+			 url(~@/assets/fonts/notosanskr-light.woff) format('woff');
+}
+
+@font-face {
+	font-family: NotoSans;
+	font-style: normal;
+	font-weight: 400;
+	src: local('NotoSansRegular'),
+	     local('NotoSansRegular'),
+			 url(~@/assets/fonts/notosanskr-regular.eot);
+	src: url(~@/assets/fonts/notosanskr-regular.eot?#iefix) format('embedded-opentype'),
+			 url(~@/assets/fonts/notosanskr-regular.woff2) format('woff2'),
+			 url(~@/assets/fonts/notosanskr-regular.woff) format('woff');
+}
+
+@font-face {
+	font-family: NotoSans;
+	font-style: normal;
+	font-weight: 500;
+	src: local('NotoSansMedium'),
+			 local('NotoSansMedium'),
+			 url(~@/assets/fonts/notosanskr-medium.eot);
+	src: url(~@/assets/fonts/notosanskr-medium.eot?#iefix) format('embedded-opentype'),
+			 url(~@/assets/fonts/notosanskr-medium.woff2) format('woff2'),
+			 url(~@/assets/fonts/notosanskr-medium.woff) format('woff');
+}
+
+@font-face {
+	font-family: NotoSans;
+	font-style: normal;
+	font-weight: 600;
+	src: local('NotoSansBold'),
+	     local('NotoSansBold'),
+			 url(~@/assets/fonts/notosanskr-bold.eot);
+	src: url(~@/assets/fonts/notosanskr-bold.eot?#iefix) format('embedded-opentype'),
+			 url(~@/assets/fonts/notosanskr-bold.woff2) format('woff2'),
+			 url(~@/assets/fonts/notosanskr-bold.woff) format('woff');
+}
