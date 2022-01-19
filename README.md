@@ -1,5 +1,5 @@
 # todolist
-<<<<<<< HEAD
+
 Vue.js(2.x) 기반의 TodoList
 =======
 
@@ -25,4 +25,3 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
->>>>>>> 318795551d92e65bd7729f548f33cf32d66f48c6
