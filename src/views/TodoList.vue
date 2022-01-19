@@ -257,6 +257,23 @@ export default {
 					padding: 15px 10px;
 					border: 1px solid #ccc;
 					background: #FFF;
+
+					&:before {
+						content: "";
+						display: block;
+						position: absolute;
+						z-index: -1;
+						top: -6px;
+						right: 28px;
+						width: 10px;
+						height: 10px;
+						background: #fff;
+						border: {
+							top: 1px solid #ccc;
+							left: 1px solid #ccc;
+						};
+						transform: rotate(45deg);
+					}
 				}
 
 				&__list {
