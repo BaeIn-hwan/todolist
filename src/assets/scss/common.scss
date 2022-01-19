@@ -1,0 +1,27 @@
+.align {
+	&--left {
+		text-align: left;
+	}
+
+	&--center {
+		text-align: center;
+	}
+
+	&--right {
+		text-align: right;
+	}
+}
+
+.valign {
+	&--top {
+		vertical-align: top !important;
+	}
+
+	&--middle {
+		vertical-align: middle !important;
+	}
+
+	&--bottom {
+		vertical-align: bottom !important;
+	}
+}

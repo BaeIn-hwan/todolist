@@ -1,22 +1,31 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import TodoList from '@/views/TodoList.vue'
+import TodoDetail from '@/views/TodoDetail.vue'
+import TodoWrite from '@/views/TodoWrite.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    name: 'Main',
+    redirect: '/TodoList',
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '/TodoList',
+    name: 'TodoList',
+    component: TodoList
+  },
+  {
+    path: '/TodoDetail/:id',
+    name: 'TodoDetail',
+    component: TodoDetail
+  },
+  {
+    path: '/TodoWrite',
+    name: 'TodoWrite',
+    component: TodoWrite
   }
 ]
 
