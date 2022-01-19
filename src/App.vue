@@ -17,8 +17,9 @@
     <button type="button" @click="modalEvent($event)">modal 오픈</button> -->
 
     <alert-component :alertWidth="$store.state.alert.width" :alertHeight="$store.state.alert.height" :alertMessage="$store.state.alert.message" v-if="$store.state.alert.isOpen"></alert-component>
-    
-    <confirm-component :confirmWidth="confirm.width" :confirmHeight="confirm.height" :confirmMessage="confirm.message" v-if="confirm.isOpen" @confirm-close="confirmClose($event, flag)"></confirm-component>
+    <!-- <confirm-component :confirmWidth="confirm.width" :confirmHeight="confirm.height" :confirmMessage="confirm.message" v-if="confirm.isOpen" @confirm-close="confirmClose($event, flag)"></confirm-component> -->
+
+    <confirm-component :confirmWidth="confirm.deleteList.width" :confirmHeight="confirm.deleteList.height" :confirmMessage="confirm.deleteList.message" v-if="confirm.deleteList.isOpen" @confirm-close="confirmClose($event, flag)"></confirm-component>
 
     <modal-component :modalWidth="modal.listDetail.width" :modalHeight="modal.listDetail.height" :modalTitle="modal.listDetail.title" v-if="modal.listDetail.isOpen" @modal-close="modalEvent()">
       <div class="list-detail">
@@ -44,10 +45,12 @@ export default {
   data() {
     return {
       confirm: {
-        isOpen: false,
-        width: 0,
-        height: 0,
-        message: '',
+        deleteList: {
+          isOpen: false,
+          width: 0,
+          height: 0,
+          message: '리스트를 삭제하시겠습니까?',
+        }
       },
       modal: {
         listDetail: {

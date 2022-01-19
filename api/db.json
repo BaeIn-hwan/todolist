@@ -1,13 +1,6 @@
 {
   "todolist": [
     {
-      "title": "나 테스트",
-      "date": "2022-01-13",
-      "content": "ㅂㅈㄷ",
-      "completed": false,
-      "id": 1
-    },
-    {
       "title": "등록",
       "date": "2022-01-06",
       "content": "테스트",
