@@ -1,32 +1,38 @@
 <template>
 	<article class="todo todo-write">
-		<ul class="todo-write__table">
-			<li class="todo-write__row">
-				<strong class="todo-write__title">제목</strong>
-				<div class="todo-write__content">
-					<input type="text" class="todo-write__form--input" placeholder="제목을 입력해주세요." v-model="todoItem.title" @input="inputTitle($event)">
-				</div>
-			</li>
+		<form @submit.prevent="save">
+			<fieldset>
+				<legend>TODOLIST 등록</legend>
 
-			<li class="todo-write__row">
-				<strong class="todo-write__title">날짜</strong>
-				<div class="todo-write__content">
-					<input type="date" class="todo-write__form--input" v-model="todoItem.date">
-				</div>
-			</li>
+				<ul class="todo-write__table">
+					<li class="todo-write__row">
+						<strong class="todo-write__title">제목</strong>
+						<div class="todo-write__content">
+							<input type="text" class="todo-write__form--input" placeholder="제목을 입력해주세요." v-model="todoItem.title" @input="inputTitle($event)">
+						</div>
+					</li>
 
-			<li class="todo-write__row">
-				<strong class="todo-write__title valign--top">내용</strong>
-				<div class="todo-write__content">
-					<textarea class="todo-write__form--textarea" placeholder="내용을 입력해주세요." v-model="todoItem.content" @input="inputContent($event)"></textarea>
-				</div>
-			</li>
-		</ul>
+					<li class="todo-write__row">
+						<strong class="todo-write__title">날짜</strong>
+						<div class="todo-write__content">
+							<input type="date" class="todo-write__form--input" v-model="todoItem.date">
+						</div>
+					</li>
 
-		<div class="todo-write__btn--area">
-			<button type="button" class="todo-common__btn todo-common__btn--white" @click="todoBack($event)">취소</button>
-			<button type="button" class="todo-common__btn todo-common__btn--black" @click="todoSubmit($event)">등록</button>
-		</div>
+					<li class="todo-write__row">
+						<strong class="todo-write__title valign--top">내용</strong>
+						<div class="todo-write__content">
+							<textarea class="todo-write__form--textarea" placeholder="내용을 입력해주세요." v-model="todoItem.content" @input="inputContent($event)"></textarea>
+						</div>
+					</li>
+				</ul>
+
+				<div class="todo-write__btn--area">
+					<button type="button" class="todo-common__btn todo-common__btn--black" @click="save($event)">등록</button>
+					<button type="button" class="todo-common__btn todo-common__btn--white" @click="todoBack($event)">취소</button>
+				</div>
+			</fieldset>
+		</form>
 	</article>
 </template>
 
@@ -40,7 +46,14 @@ export default {
 				date: '',
 				content: '',
 				completed: false
-			}
+			},
+		}
+	},
+	created() {
+		const queryString = this.$route.query.update;
+
+		if (queryString) {
+			this.requestTodoItem(queryString);
 		}
 	},
 	methods: {
@@ -51,24 +64,84 @@ export default {
 			this.todoItem.content = e.target.value;
 		},
 		todoBack() {
-			history.back();
+				// this.$store.dispatch('alertOpen', {
+				// 	isOpen: true,
+				// 	message: '확인',
+				// 	returnURL: '/TodoList'
+				// });
+			this.$router.push('/');
 		},
-		async todoSubmit() {
+		save() {
+			if ( this.validationCheck() ) {
+				this.todoSubmit();
+			}
+		},
+		async requestTodoItem(idx) {
 			try {
 				const response = await this.$store.dispatch("requestMethods", {
-					method: 'POST',
-					url: `http://localhost:3001/todolist`,
-					data: this.todoItem
+					method: 'GET',
+					url: `http://localhost:3001/todolist/${idx}`,
 				});
 
-				if (response.status && response.status == 201) {
-					this.$router.push('/TodoList');
+				if (response.data) {
+					delete(response.data.id);
+					this.todoItem = response.data;
 				}
 			}
 			catch(ex) {
 				console.log('error', ex);
 			}
-		}
+		},
+		async todoSubmit() {
+			const queryString = this.$route.query.update;
+
+			try {
+				const response = await this.$store.dispatch("requestMethods", {
+					method: queryString ? 'PATCH' : 'POST',
+					url: queryString ? `http://localhost:3001/todolist/${queryString}` : `http://localhost:3001/todolist`,
+					data: this.todoItem
+				});
+
+				if (response.status && response.status == 201) {
+				}
+				
+				this.$store.dispatch('alertOpen', {
+					isOpen: true,
+					message: queryString ? '수정되었습니다.' : '등록되었습니다.',
+					returnURL: '/TodoList'
+				});
+			}
+			catch(ex) {
+				console.log('error', ex);
+			}
+		},
+		validationCheck() {
+			const todoItem = this.todoItem;
+
+			if (todoItem.title == '') {
+				this.$store.dispatch('alertOpen', {
+					isOpen: true,
+					message: '제목을 입력해주세요.',
+				});
+				return false;
+			}
+			else if (todoItem.date == '') {
+				this.$store.dispatch('alertOpen', {
+					isOpen: true,
+					message: '날짜를 선택해주세요.',
+				});
+				return false;
+			}
+			else if (todoItem.content == '') {
+				this.$store.dispatch('alertOpen', {
+					isOpen: true,
+					message: '내용을 선택해주세요.',
+				});
+				return false;
+			}
+
+			return true;
+		},
 	}
 }
 </script>

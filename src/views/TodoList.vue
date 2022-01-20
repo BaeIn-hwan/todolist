@@ -29,7 +29,7 @@
 					<li class="todo-list__list" v-for="(list, index) in todoList" :key="index">
 						<div class="todo-list__list__inner">
 							<label class="todo-list__list__checkbox">
-								<input type="checkbox" class="blind" v-model="list.completed">
+								<input type="checkbox" class="blind" v-model="list.completed" @change="todoCompleteChange($event, list.id, list.completed)">
 								<span></span>
 							</label>
 
@@ -45,11 +45,11 @@
 
 								<ul class="controller__box" v-if="todoControllerIdx === list.id">
 									<li class="controller__list">
-										<button type="button" @click="todoControllerMove('update', list.id)">수정</button>
+										<button type="button" @click="todoControllerMove($event, 'update', list.id)">수정</button>
 									</li>
 
 									<li class="controller__list">
-										<button type="button" @click="todoControllerMove('delete', list.id)">삭제</button>
+										<button type="button" @click="todoControllerMove($event, 'delete', list.id)">삭제</button>
 									</li>
 								</ul>
 							</div>
@@ -73,7 +73,10 @@
 </template>
 
 <script>
+import eventBus from '@/event-bus'
+
 export default {
+	name: 'TodoList',
 	data() {
 		return {
 			load: {
@@ -106,30 +109,38 @@ export default {
 		},
 		todoControllerEvent(e, idx) {
 			if (this.todoControllerIdx === idx) {
-				this.todoControllerIdx = '';
+				this.todoControllerIdx = null;
 			}
 			else {
 				this.todoControllerIdx = idx;
 			}
 		},
-		async todoControllerMove(type, idx) {
+		async todoControllerMove(e, type, idx) {
 			if (type === 'update') {
 				this.$router.push(`/TodoWrite?update=${idx}`);
 			}
 			else if (type === 'delete') {
-				try {
-					const response = await this.$store.dispatch("requestMethods", {
-						method: 'delete',
-						url: `http://localhost:3001/todolist/${idx}`
-					});
-
-					if (response.status && response.status == 200) {
-						this.requestTodoList();
+				eventBus.$emit('todoList-delete', {
+					e,
+					idx
+				});
+				this.todoControllerIdx = null;
+			}
+		},
+		async todoCompleteChange(e, idx, flag) {
+			try {
+				const response = await this.$store.dispatch('requestMethods', {
+					method: 'PATCH',
+					url: `http://localhost:3001/todolist/${idx}`,
+					data: {
+						completed: flag
 					}
-				}
-				catch(ex) {
-					console.error('error', ex);
-				}
+				});
+
+				console.log(response)
+			}
+			catch(ex) {
+				console.error('error', ex);
 			}
 		}
 	}
@@ -222,6 +233,7 @@ export default {
 		&__txt {
 			min-height: 24px;
 			font-size: 20px;
+			color: #000;
 			line-height: 24px;
 			@include line();
 		}

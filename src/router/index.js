@@ -15,7 +15,7 @@ const routes = [
   {
     path: '/TodoList',
     name: 'TodoList',
-    component: TodoList
+    component: TodoList,
   },
   {
     path: '/TodoDetail/:id',

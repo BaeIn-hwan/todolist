@@ -5,8 +5,8 @@
 			<p class="confirm-layer__content">{{confirmMessage}}</p>
 
 			<div class="confirm-layer__btn">
-				<button type="button" class="todo-common__btn todo-common__btn--black" @click="confirmClose($event, true)">{{yes || 예}}</button>
-				<button type="button" class="todo-common__btn todo-common__btn--white" @click="confirmClose($event, false)">{{no || 아니오}}</button>
+				<button type="button" class="todo-common__btn todo-common__btn--black" @click="confirmClose($event, true)">{{yes}}</button>
+				<button type="button" class="todo-common__btn todo-common__btn--white" @click="confirmClose($event, false)">{{no}}</button>
 			</div>
 		</div>
 	</div>
@@ -31,10 +31,17 @@ export default {
 			type: String,
 			require: true,
 		},
+		yes: {
+			type: String,
+			default: '예',
+		},
+		no: {
+			type: String,
+			default: '아니오',
+		}
 	},
 	methods: {
 		confirmClose(e, flag) {
-			console.log(e, flag)
 			this.$emit('confirm-close', {
 				e,
 				flag

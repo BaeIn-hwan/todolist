@@ -12,6 +12,7 @@ export default new Vuex.Store({
       width: 0,
       height: 0,
       message: '',
+      returnURL: '',
     }
   },
   getters: {
@@ -51,10 +52,10 @@ export default new Vuex.Store({
   },
   mutations: {
     setAlertOpen(state, alertData) {
-      state.alert = alertData;
+      state.alert = Object.assign(state.alert, alertData);
     },
     setAlertClose(state, alertData) {
-      state.alert = alertData;
+      state.alert = Object.assign(state.alert, alertData);
     }
   },
 })

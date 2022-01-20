@@ -4,7 +4,7 @@
 			<p class="alert-layer__content">{{$store.state.alert.message}}</p>
 
 			<div class="alert-layer__btn">
-				<button type="button" class="todo-common__btn todo-common__btn--black" @click="alertClose($event)">확인</button>
+				<button type="button" class="todo-common__btn todo-common__btn--black" @click="alertClose()">확인</button>
 			</div>
 		</div>
 	</div>
@@ -15,13 +15,20 @@ export default {
 	name: 'AlertComponent',
 	methods: {
 		alertClose() {
+			const url = this.$store.state.alert.returnURL;
+
+			if (url != '') {
+				this.$router.push(url);
+			}
+
 			this.$store.dispatch('alertClose', {
 				isOpen: false,
-        width: 0,
-        height: 0,
-        message: '',
-			});
-		}
+				width: 0,
+				height: 0,
+				message: '',
+				returnURL: '',
+			})
+		},
 	}
 }
 </script>
