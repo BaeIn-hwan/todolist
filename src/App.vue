@@ -7,29 +7,25 @@
     </header>
 
     <main class="container" id="container">
-      <router-view/>
+      <router-view ref="pageRouter"/>
     </main>
 
-    <button type="button" @click="confirmEvent($event)">confirm 오픈</button>
-
-    <!-- <button type="button" @click="alertEvent()">alert 오픈</button>
-    
-    <button type="button" @click="modalEvent($event)">modal 오픈</button> -->
-
+    <!-- 공통 alert -->
     <alert-component :alertWidth="$store.state.alert.width" :alertHeight="$store.state.alert.height" :alertMessage="$store.state.alert.message" v-if="$store.state.alert.isOpen"></alert-component>
-    <!-- <confirm-component :confirmWidth="confirm.width" :confirmHeight="confirm.height" :confirmMessage="confirm.message" v-if="confirm.isOpen" @confirm-close="confirmClose($event, flag)"></confirm-component> -->
+    
+    <!-- 삭제하기 confirm -->
+    <confirm-component :confirmWidth="confirm.deleteList.width" :confirmHeight="confirm.deleteList.height" :confirmMessage="confirm.deleteList.message" v-if="confirm.deleteList.isOpen" @confirm-close="confirmClose($event)"></confirm-component>
 
-    <confirm-component :confirmWidth="confirm.deleteList.width" :confirmHeight="confirm.deleteList.height" :confirmMessage="confirm.deleteList.message" v-if="confirm.deleteList.isOpen" @confirm-close="confirmClose($event, flag)"></confirm-component>
-
+    <!-- Modal Test -->
     <modal-component :modalWidth="modal.listDetail.width" :modalHeight="modal.listDetail.height" :modalTitle="modal.listDetail.title" v-if="modal.listDetail.isOpen" @modal-close="modalEvent()">
       <div class="list-detail">
         <ul class="list-detail__box">
           <li class="list-detail__list">
-            <button type="button" class="todo-common__btn todo-common__btn--black" @click="todoListDetail()">수정</button>
+            <button type="button" class="todo-common__btn todo-common__btn--black">수정</button>
           </li>
 
           <li class="list-detail__list">
-            <button type="button" class="todo-common__btn todo-common__btn--white" @click="todoListDelete()">삭제</button>
+            <button type="button" class="todo-common__btn todo-common__btn--white">삭제</button>
           </li>
         </ul>
       </div>
@@ -38,18 +34,20 @@
 </template>
 
 <script>
-import EventBus from '@/event-bus/'
+import eventBus from '@/event-bus'
 
 export default {
   name: 'App',
   data() {
     return {
+      listIndex: null,
       confirm: {
         deleteList: {
           isOpen: false,
           width: 0,
           height: 0,
-          message: '리스트를 삭제하시겠습니까?',
+          message: null,
+          idx: null,
         }
       },
       modal: {
@@ -64,37 +62,38 @@ export default {
     }
   },
   created() {
-    EventBus.$on('list-more', this.modalEvent);
+    eventBus.$on('todoList-delete', this.confirmTodoDelete);
   },
   methods: {
-    confirmOpen() {
-      this.confirm.isOpen = true;
+    confirmTodoDelete({idx}) {
+      const confirmDelete = this.confirm.deleteList;
+
+      if (!confirmDelete.isOpen) {
+        this.listIndex = idx;
+        confirmDelete.isOpen = true;
+        confirmDelete.message = '리스트를 삭제하시겠습니까?';
+      }
     },
-    confirmClose() {
-      this.confirm.isOpen = false;
-    },
-    modalOpen() {
-      this.confirm.isOpen = true;
-    },
-    modalClose() {
-      this.confirm.isOpen = false;
-    },
-    modalEvent(payload) {
-      this.modal.listDetail.isOpen = true;
-      this.modal.listDetail.idx = payload.listIndex;
-    },
-    todoListDetail() {
-      this.$router.push(`/TodoWrite/${this.modal.listDetail.idx}`);
+    confirmClose({flag}) {
+      const confirmDelete = this.confirm.deleteList;
+
+      if (flag) {
+        this.todoListDelete();
+      }
+      else {
+        confirmDelete.isOpen = false;
+      }
     },
     async todoListDelete() {
       try {
         const response = await this.$store.dispatch("requestMethods", {
           method: 'delete',
-          url: `http://localhost:3001/todolist/${this.modal.listDetail.idx}`
+          url: `http://localhost:3001/todolist/${this.listIndex}`
         });
 
         if (response.status && response.status == 200) {
-          this.modal.listDetail.isOpen = false;
+          this.$refs.pageRouter.requestTodoList();
+          this.confirmClose(false);
         }
       }
       catch(ex) {
