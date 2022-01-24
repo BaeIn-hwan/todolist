@@ -2,10 +2,6 @@
 	<article class="content todo-list">
 		<h2 class="blind">TODOLIST</h2>
 
-		<div class="todo-list__header align--right">
-			<router-link to="/TodoWrite" class="todo-common__btn todo-common__btn--green">등록</router-link>
-		</div>
-
 		<template v-if="load.todolist === false">
 			<ul class="todo-list__box">
 				<li class="todo-list__list" v-for="index in 5" :key="index">
@@ -34,7 +30,7 @@
 							</label>
 
 							<div class="todo-list__list__content">
-								<p class="todo-list__list__txt">{{list.content}}</p>
+								<p class="todo-list__list__txt">{{list.title}}</p>
 								<span class="todo-list__list__date">{{list.date}}</span>
 							</div>
 
@@ -149,6 +145,10 @@ export default {
 
 <style lang="scss" scoped>
 .todo-list {
+	max-width: 640px;
+	margin: 0 auto;
+	padding: 0 20px;
+
 	&__header {
 		font-size: 0;
 
